@@ -47,10 +47,10 @@ public class ProfileManagement extends AppCompatActivity  {
         Cursor cursor = dBhelper.readAllInfor(userId);
         if (cursor.moveToFirst()) {
             userText.setText(cursor.getString(1));
-            passwordText.setText(cursor.getString(2));
-            dobText.setText(cursor.getString(3));
-            if (cursor.getString(4) != null) {
-                if (cursor.getString(4).equals("Male")) {
+            passwordText.setText(cursor.getString(4));
+            dobText.setText(cursor.getString(2));
+            if (cursor.getString(3) != null) {
+                if (cursor.getString(3).equals("Male")) {
                     radioGroup.check(R.id.radioMale);
                 } else {
                     radioGroup.check(R.id.radioFemale);
