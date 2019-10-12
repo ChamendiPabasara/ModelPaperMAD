@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -43,6 +42,7 @@ public class DBhelper extends SQLiteOpenHelper {
             db.execSQL(SQL_CREATE_ENTRIES);
             Log.d("myerror", "Table create Successful!!!");
 
+
         }catch (Exception e){
             Log.d("myerror", "Table create Error!!!"+e.toString());
         }
@@ -50,9 +50,6 @@ public class DBhelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-         //db.execSQL(SQL_DELETE_ENTRIES);
-         //onCreate(db);
 
         try{
             db.execSQL(SQL_DELETE_ENTRIES);
@@ -68,12 +65,14 @@ public class DBhelper extends SQLiteOpenHelper {
         db.setVersion(oldVersion);
     }
 
-
+    //Supposed if question asked to implement add, update, read methods in this class
+    //to check user when login
 
     public long checkUser(String userName,String password){
 
         SQLiteDatabase db =getReadableDatabase();
 
+        //check if entered username and password exists in the users table
         String[] selectionArgs = {userName,password};
 
         String query = "SELECT * FROM " + UserProfile.Users.TABLE_NAME + " WHERE "+ UserProfile.Users.COL_NAME + "= ? AND " +
@@ -81,24 +80,28 @@ public class DBhelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(query,selectionArgs);
 
+        //if username and password match and row count is greater than 1 get that userId or else assign -1 to @useerId
         long userId = -1;
         if (cursor.moveToFirst()) {
             userId = (cursor.getCount() >= 1) ? cursor.getLong(0) : -1;
         }
 
+        //if the user count greater than(shoul be equal to if properly check) 1 user exists and return true
+        //return cursor.getCount() >= 1;
+
+        //to login user from primary key
+
         return userId;
 
     }
 
-
+    //register/add user to db table
     public long addInfo(String userName,String password) {
 
         SQLiteDatabase db=getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(UserProfile.Users.COL_NAME,userName);
         values.put(UserProfile.Users.COL_PASSWORD,password);
-
-       // this.getWritableDatabase().insertOrThrow(UserProfile.Users.TABLE_NAME,"",values);
 
         return db.insert(UserProfile.Users.TABLE_NAME, null, values);
 
@@ -119,18 +122,6 @@ public class DBhelper extends SQLiteOpenHelper {
         values.put(UserProfile.Users.COL_GENDER,Gender);
 
         return db.update(UserProfile.Users.TABLE_NAME, values, whereClause, selectionArgs) > 0;
-
-        /*String selection = UserProfile.Users.COL_NAME+" LIKE ?";
-        String[] selectionArgs = {userName};
-
-
-        int count=db.update(
-                UserProfile.Users.TABLE_NAME,
-                values,
-                selection,
-                selectionArgs
-        );*/
-
 
 
     }
@@ -161,22 +152,8 @@ public class DBhelper extends SQLiteOpenHelper {
 
         );
 
-        /*List userNames = new ArrayList<>();
-        List passwords = new ArrayList<>();
-
-        while (cursor.moveToNext())
-        {
-            String userName = cursor.getString(cursor.getColumnIndexOrThrow(UserProfile.Users.COL_NAME));
-            String password = cursor.getString(cursor.getColumnIndexOrThrow(UserProfile.Users.COL_PASSWORD));
-
-            userNames.add(userName);
-            passwords.add(password);
-        }
-        cursor.close();
-        return userNames;*/
-
+        //if the user count greater than(shoul be equal to if properly check) 1 user exists and return true
        return cursor;
-
     }
 
     public Cursor readAllInfor(long userId) {

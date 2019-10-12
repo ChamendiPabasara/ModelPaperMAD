@@ -14,6 +14,8 @@ public class Home extends AppCompatActivity {
     private EditText usernameText,passwordText;
     private Button LoginButtonn,registerButton;
     DBhelper dBhelper;
+
+    //newly added user primary key
     long userId = -1;
 
     @Override
@@ -53,7 +55,7 @@ public class Home extends AppCompatActivity {
         String userName = usernameText.getText().toString();
         String password = passwordText.getText().toString();
 
-
+//if username and pass does not match -1 will return from checkUser function and if not -1 logged in
         userId = dBhelper.checkUser(userName,password);
 
         if (userId != -1) {
